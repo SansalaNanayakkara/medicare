@@ -327,16 +327,16 @@ app.get("/api/medications", (req, res) => {
 
 // Add a new route for adding medications (POST /api/appointments)
 app.post("/api/addpayments", (req, res) => {
-  const { patientId, totalAmount,paymentMethod,date,time,description} = req.body;
+  const { appointmentId, totalAmount,paymentMethod,date,time,description} = req.body;
   console.log(req.body);
-  if(!patientId){
+  if(!appointmentId){
     console.log('Empty data');
   }
 
         // Insert the doctor into the medications table
         db.query(
-          "INSERT INTO payments (patient_id,total_amount,payment_method,payment_date,payment_time,payment_description) VALUES (?,?,?,?,?,?)",
-          [patientId, totalAmount,paymentMethod,date,time,description],
+          "INSERT INTO payments (appointment_id,total_amount,payment_method,payment_date,payment_time,payment_description) VALUES (?,?,?,?,?,?)",
+          [appointmentId, totalAmount,paymentMethod,date,time,description],
           (error, results) => {
             if (error) {
               return res.status(500).json({ error: error.message });

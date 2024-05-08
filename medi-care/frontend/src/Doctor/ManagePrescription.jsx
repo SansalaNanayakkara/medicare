@@ -68,26 +68,19 @@ function ManagePrescription() {
           <thead>
             <tr>
               <th>#</th>
-              {/* prescription id */}
-              {/* <th>Doctor ID</th>
-              <th>Patient ID</th> */}
+              <th>Prescription ID</th>
               <th>Appointment ID</th>
-              {/* <th>Quantity Prescribed</th> */}
-              <th>Description</th>
-              {/* <th>Date</th> */}
-              <th>Action</th>
+             <th> Description </th>
             </tr>
           </thead>
           <tbody>
             {prescriptions.map((prescription, index) => (
               <tr key={prescription.id}>
                 <td>{index + 1}</td>
-                {/* <td>{prescription.doctorId}</td>
-                <td>{prescription.patientId}</td> */}
                 <td>{prescription.medicationId}</td>
                 <td>{prescription.quantityPrescribed}</td>
                 <td>{prescription.description}</td>
-                {/* <td>{prescription.date}</td> */}
+                
                 <td>
                   <Button variant="primary" size="sm" onClick={() => handleViewPrescription(prescription.id)}>
                     View

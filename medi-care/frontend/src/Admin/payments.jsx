@@ -67,7 +67,7 @@ function Payments() {
               <thead>
                 <tr>
                   <th>Payment ID</th>
-                  <th>Patient ID</th>
+                  <th>Appointment ID</th>
                   <th>Total Amount</th>
                   <th>Payment Method</th>
                   <th>Date</th>
@@ -79,7 +79,7 @@ function Payments() {
       {payments.map((payments) => (
         <tr key={payments.payment_id}>
           <td>{payments.payment_id}</td>
-          <td>{payments.patient_id}</td>
+          <td>{payments.appointment_id}</td>
           <td>{payments.total_amount}</td>
           <td>{payments.payment_method}</td>
           {/* <td>{payments.payment_date}</td> */}

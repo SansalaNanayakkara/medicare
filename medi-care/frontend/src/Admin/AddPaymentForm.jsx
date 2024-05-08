@@ -5,7 +5,7 @@ import axios from 'axios';
 
 function AddPaymentForm(props) {
   const [formData, setFormData] = useState({
-    patientId: "",
+    appointmentId: "",
     totalAmount: "",
     paymentMethod: "",
     date: "",
@@ -20,11 +20,11 @@ function AddPaymentForm(props) {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const {patientId, totalAmount, paymentMethod, date, time,description } = formData;
+    const {appointmentId, totalAmount, paymentMethod, date, time,description } = formData;
 
     try {
       const response = await axios.post('http://localhost:5000/api/addpayments', {
-       patientId,
+       appointmentId,
        totalAmount,
        paymentMethod,
        date,
@@ -35,7 +35,7 @@ function AddPaymentForm(props) {
       if (response.status === 200) {
         alert('Payment added successfully');
         setFormData({
-          patientId: "",
+          appointmentId: "",
           totalAmount: "",
           paymentMethod: "",
           date: "",
@@ -64,11 +64,11 @@ function AddPaymentForm(props) {
     <form onSubmit={handleFormSubmit} className="add-payment-form">
       <h2>Add Payment</h2>
       <div className="form-group">
-        <label htmlFor="patientId">Patient ID:</label>
+        <label htmlFor="appointmentId">Appointment ID:</label>
         <input
           type="number"
-          name="patientId"
-          id="patientId"
+          name="appointmentId"
+          id="appointmentId"
           className="form-control form-control-sm"
           value={formData.patientId}
           onChange={handleInputChange}

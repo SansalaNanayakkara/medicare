@@ -6,7 +6,7 @@ function PaymentList({ payments }) {
       {payments.map((payment) => (
         <tr key={payment.id}>
           <td>{payment.id}</td>
-          <td>{payment.patientId}</td>
+          <td>{payment.appointmentId}</td>
           <td>{payment.totalAmount}</td>
           <td>{payment.paymentMethod}</td>
           <td>{payment.date}</td>
