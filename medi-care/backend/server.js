@@ -364,6 +364,68 @@ app.get("/api/payments", (req, res) => {
   });
 });
 
+
+
+app.post("/api/addprescription", (req, res) => {
+  const { appointmentId, prescribedTime, status } = req.body;
+
+  // You may want to format the prescribedTime according to your needs
+  // For example, using a library like moment.js or day.js
+  // const formattedPrescribedTime = moment(prescribedTime).format('YYYY-MM-DD HH:mm:ss');
+
+  db.query("INSERT INTO prescriptions (appointment_id, prescribed_time, status) VALUES (?, ?, ?)", [appointmentId, prescribedTime, status], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json({ success: true, prescription_id: results.insertId });
+  });
+});
+
+
+app.post("/api/addprescriptiondetails", (req, res) => {
+  const { prescriptionId, medicationId, quantityPrescribed, dosage, frequency, duration, description } = req.body;
+
+  db.query(
+    "INSERT INTO prescription_details (prescription_id, medication_id, quantity_prescribed, dosage, frequency, duration, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [prescriptionId, medicationId, quantityPrescribed, dosage, frequency, duration, description],
+    (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      return res.json({ success: true });
+    }
+  );
+});
+
+app.get("/api/prescriptions", (req, res) => {
+  db.query("SELECT * FROM prescriptions", (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(results);
+  });
+});
+
+app.get("/api/patientprescriptions/:id", (req, res) => {
+  const patientId = req.params.id;
+
+  db.query(
+    "SELECT prescriptions.*, prescription_details.* FROM prescriptions JOIN prescription_details ON prescriptions.id = prescription_details.prescription_id JOIN appointments ON prescriptions.appointment_id = appointments.id WHERE appointments.patient_id = ?",
+    [patientId],
+    (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      return res.json(results);
+    }
+  );
+});
+
+
 // Add a new route for getting patient demographics (GET /api/patient-demographics)
 app.get("/api/patient-demographics", (req, res) => {
   db.query('SELECT gender, COUNT(*) as count FROM patients GROUP BY gender', (error, results) => {

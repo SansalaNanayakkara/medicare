@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function PatientHeader() {
   const links = [
     { path: '/patientdashboard', label: 'Dashboard' },
-    { path: '/viewappointment', label: 'Appointments' },
+    { path: '/pappointments', label: 'Appointments' },
     { path: '/viewdoctors', label: 'Doctors' },
     { path: '/viewprescription', label: 'Prescriptions' },
     { path: '/viewpayments', label: 'Payments' },

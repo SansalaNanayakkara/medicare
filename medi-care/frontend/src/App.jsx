@@ -23,17 +23,21 @@ import AddMedicationForm from './Admin/AddMedicationForm';
 import AddPaymentForm from './Admin/AddPaymentForm';
 import DoctorHeader from './Doctor/DoctorHeader';
 import ManageAppointment from './Doctor/ManageAppointment';
-import ManagePrescription from './Doctor/ManagePrescription';
+import ViewPrescriptions from './Doctor/ViewPrescriptions';
 import ViewPatients from './Doctor/ViewPatients';
 import DoctorDashboard from './Doctor/DoctorDashboard';
 import Dprofile from './Doctor/Dprofile';
-import AddPrescription from './Doctor/AddPrescription';
+import AddPrescriptionForm from './Doctor/AddPrescriptionForm';
 import PatientDashboard from './Patient/PatientDashboard';
 import Pprofile from './Patient/Pprofile';
-import ViewAppointment from './Patient/ViewAppointment';
+import ViewAppointment from './Patient/ViewAppointmentList';
 import ViewDoctors from './Patient/ViewDoctors';
 import ViewPayments from './Patient/ViewPayments';
-import ViewPrescription from './Patient/ViewPrescription';
+import Prescription from './Doctor/Prescription';
+// import PrescriptionDetails from './components/PrescriptionDetails';
+import ViewAppointmentList from './Patient/ViewAppointmentList';
+import AddAppointmentFormP from './Patient/AddAppointmentFormP';
+import Pappointments from './Patient/Pappointments';
 
 function App() {
   return (
@@ -44,12 +48,12 @@ function App() {
       ) && <AdminHeader />}
 
        {/* Conditionally render DoctorHeader */}
-      {['/doctordashboard', '/manageprescription', '/viewpatients', '/manageappointment','/dprofile','/addprescription' ].includes(
+      {['/doctordashboard', '/manageprescription', '/viewpatients', '/manageappointment','/dprofile','/prescriptiondetails'].includes(
         window.location.pathname
       ) && <DoctorHeader />}
 
-       {/* Conditionally render DoctorHeader */}
-       {['/patientdashboard', '/viewprescription', '/viewdoctors', '/viewappointment','/pprofile','/viewpayments' ].includes(
+       {/* Conditionally render PatientHeader */}
+       {['/patientdashboard', '/viewprescription', '/viewdoctors', '/viewappointmentlist','/pprofile','/viewpayments' ].includes(
         window.location.pathname
       ) && <PatientHeader />}
 
@@ -73,18 +77,22 @@ function App() {
         <Route path="/addmedicationform" element={<AddMedicationForm />} />
         <Route path="/addpaymentform" element={<AddPaymentForm />} />
         <Route path="/manageappointment" element={<ManageAppointment />} />
-        <Route path="/manageprescription" element={<ManagePrescription />} />
+        <Route path="/viewprescriptions" element={<ViewPrescriptions />} />
         <Route path="/viewpatients" element={<ViewPatients />} />
         <Route path="/doctordashboard" element={<DoctorDashboard />} />
         <Route path="/dprofile" element={<Dprofile />} />
-        <Route path="/addprescription" element={<AddPrescription />} />
+        <Route path="/addprescriptionform" element={<AddPrescriptionForm />} />
         <Route path="/patientdashboard" element={<PatientDashboard />} />
         <Route path="/pprofile" element={<Pprofile />} />
         <Route path="/viewappointment" element={<ViewAppointment />} />
         <Route path="/viewdoctors" element={<ViewDoctors />} />
         <Route path="/viewpayments" element={<ViewPayments />} />
-        <Route path="/viewprescription" element={<ViewPrescription />} />
-
+        <Route path="/prescription" element={<Prescription />} />
+        {/* <Route path="/prescriptiondetails" element={<PrescriptionDetails />} /> */}
+        <Route path="/viewappointmentlist" element={<ViewAppointmentList />} />
+        <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />
+        <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />
+        <Route path="/pappointments" element={<Pappointments />} />
       </Routes>
     </BrowserRouter>
   );
