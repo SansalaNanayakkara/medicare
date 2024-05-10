@@ -284,6 +284,29 @@ app.get("/api/appointments", (req, res) => {
   });
 });
 
+app.get("/api/doctor-appointments", (req, res) => {
+  const doctorId = req.query.doctorId;
+
+  let query;
+  if (doctorId) {
+    query = `
+      SELECT appointments.*
+      FROM appointments
+      WHERE appointments.doctor_id = ${doctorId}
+    `;
+  } else {
+    query = `SELECT * FROM appointments`;
+  }
+
+  db.query(query, (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(results);
+  });
+});
+
 
 // Add a new route for adding medications (POST /api/appointments)
 app.post("/api/addmedications", (req, res) => {
@@ -363,6 +386,31 @@ app.get("/api/payments", (req, res) => {
     return res.json(results);
   });
 });
+
+app.get("/api/patient-payments", (req, res) => {
+  const patientId = req.query.patientId;
+
+  let query;
+  if (patientId) {
+    query = `
+      SELECT payments.*
+      FROM payments
+      INNER JOIN appointments ON payments.appointment_id = appointments.id
+      WHERE appointments.patient_id = ${patientId}
+    `;
+  } else {
+    query = `SELECT * FROM payments`;
+  }
+
+  db.query(query, (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(results);
+  });
+});
+
 
 
 
