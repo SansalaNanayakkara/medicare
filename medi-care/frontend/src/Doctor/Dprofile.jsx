@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import backgroundImage from "../Assests/background.jpg";
+import { useParams } from 'react-router-dom';
 
-function Profile() {
+
+function Dprofile() {
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -12,6 +14,8 @@ function Profile() {
     newPassword: '',
     confirmPassword: '',
   });
+
+  const { doctorId } = useParams();
 
   // Fetch initial user data (optional)
   useEffect(() => {
@@ -33,6 +37,53 @@ function Profile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    
+    // Update profile information
+    const response = await fetch(`/api/doctors/${doctorId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        specialization: userData.specialization,
+        email: userData.email,
+        mobileNumber: userData.mobileNumber,
+      }),
+    });
+  
+    const data = await response.json();
+  
+    if (response.ok) {
+      // Handle success
+    } else {
+      // Handle error
+    }
+  
+    // Update password (optional)
+    if (userData.newPassword && userData.confirmPassword) {
+      const passwordResponse = await fetch(`/api/doctors/${doctorId}/password`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: userData.currentPassword,
+          newPassword: userData.newPassword,
+          confirmPassword: userData.confirmPassword,
+        }),
+      });
+  
+      const passwordData = await passwordResponse.json();
+  
+      if (passwordResponse.ok) {
+        // Handle success
+      } else {
+        // Handle error
+      }
+    }
+  };
+  
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
     // Implement profile update logic here
     // This might involve sending a request to your backend API
@@ -45,7 +96,7 @@ function Profile() {
     // });
 
     // Handle the response from the API (success or error)
-  };
+  
 
   return (
     <div
@@ -170,5 +221,5 @@ function Profile() {
         );
       }
       
-      export default Profile;
+      export default Dprofile;
       

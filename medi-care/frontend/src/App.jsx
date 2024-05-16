@@ -93,6 +93,7 @@ function App() {
         <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />
         <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />
         <Route path="/pappointments" element={<Pappointments />} />
+        
       </Routes>
     </BrowserRouter>
   );

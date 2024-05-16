@@ -9,8 +9,8 @@ function DappointmentList({ appointments }) {
     <tbody>
       {appointments.map((appointment) => (
         <tr key={appointment.appointmentId}>
-          <td>{appointment.appointmentId}</td>
-          <td>{appointment.doctorId}</td>
+          <td>{appointment.appointment_Id}</td>
+          <td>{appointment.doctor_Id}</td>
           <td>{appointment.patientId}</td>
           <td>{appointment.date}</td>
           <td>{appointment.time}</td>

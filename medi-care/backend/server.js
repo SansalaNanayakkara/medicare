@@ -550,3 +550,73 @@ app.get("/api/appointment-counts", (req, res) => {
 //     return res.json(results);
 //   });
 // });
+
+app.put("/api/doctors/:id", (req, res) => {
+  const doctorId = req.params.id;
+  const { firstName, lastName, specialization, email, mobileNumber } = req.body;
+
+  // Update the doctor's information in the 'doctors' table
+  db.query(
+    "UPDATE doctors SET first_name = ?, last_name = ?, specialization = ?, email = ?, mobile_number = ? WHERE user_id = ?",
+    [firstName, lastName, specialization, email, mobileNumber, doctorId],
+    (error, results) => {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      // Update the user's information in the 'users' table
+      db.query(
+        "UPDATE users SET username = ? WHERE user_id = ?",
+        [firstName, doctorId],
+        (error, results) => {
+          if (error) {
+            return res.status(500).json({ error: error.message });
+          }
+
+          // Return a success message
+          return res.json({ success: true, message: 'Doctor profile updated successfully' });
+        }
+      );
+    }
+  );
+});
+
+app.put("/api/doctors/:id/password", (req, res) => {
+  const doctorId = req.params.id;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  // Check if the provided current password is correct
+  db.query("SELECT * FROM users WHERE user_id = ?", [doctorId], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    bcrypt.compare(currentPassword, results[0].password, (err, isMatch) => {
+      if (err || !isMatch) {
+        return res.json({ success: false, message: 'Incorrect current password' });
+      }
+
+      // Hash the new password
+      bcrypt.hash(newPassword, 10, (err, hash) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        // Update the user's password in the 'users' table
+        db.query(
+          "UPDATE users SET password = ? WHERE user_id = ?",
+          [hash, doctorId],
+          (error, results) => {
+            if (error) {
+              return res.status(500).json({ error: error.message });
+            }
+
+            // Return a success message
+            return res.json({ success: true, message: 'Doctor password updated successfully' });
+          }
+        );
+      });
+    });
+  });
+});
+
