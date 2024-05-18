@@ -7,7 +7,7 @@ function DoctorHeader() {
     { path: '/doctordashboard', label: 'Dashboard' },
     { path: '/manageappointment', label: 'Appointments' },
     { path: '/viewpatients', label: 'Patients' },
-    { path: '/manageprescription', label: 'Prescriptions' },
+    { path: '/prescriptionlist', label: 'Prescriptions' },
   ];
 
   const navigate = useNavigate();

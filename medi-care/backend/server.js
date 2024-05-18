@@ -412,68 +412,6 @@ app.get("/api/patient-payments", (req, res) => {
 });
 
 
-
-
-app.post("/api/addprescription", (req, res) => {
-  const { appointmentId, prescribedTime, status } = req.body;
-
-  // You may want to format the prescribedTime according to your needs
-  // For example, using a library like moment.js or day.js
-  // const formattedPrescribedTime = moment(prescribedTime).format('YYYY-MM-DD HH:mm:ss');
-
-  db.query("INSERT INTO prescriptions (appointment_id, prescribed_time, status) VALUES (?, ?, ?)", [appointmentId, prescribedTime, status], (error, results) => {
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    return res.json({ success: true, prescription_id: results.insertId });
-  });
-});
-
-
-app.post("/api/addprescriptiondetails", (req, res) => {
-  const { prescriptionId, medicationId, quantityPrescribed, dosage, frequency, duration, description } = req.body;
-
-  db.query(
-    "INSERT INTO prescription_details (prescription_id, medication_id, quantity_prescribed, dosage, frequency, duration, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [prescriptionId, medicationId, quantityPrescribed, dosage, frequency, duration, description],
-    (error, results) => {
-      if (error) {
-        return res.status(500).json({ error: error.message });
-      }
-
-      return res.json({ success: true });
-    }
-  );
-});
-
-app.get("/api/prescriptions", (req, res) => {
-  db.query("SELECT * FROM prescriptions", (error, results) => {
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    return res.json(results);
-  });
-});
-
-app.get("/api/patientprescriptions/:id", (req, res) => {
-  const patientId = req.params.id;
-
-  db.query(
-    "SELECT prescriptions.*, prescription_details.* FROM prescriptions JOIN prescription_details ON prescriptions.id = prescription_details.prescription_id JOIN appointments ON prescriptions.appointment_id = appointments.id WHERE appointments.patient_id = ?",
-    [patientId],
-    (error, results) => {
-      if (error) {
-        return res.status(500).json({ error: error.message });
-      }
-
-      return res.json(results);
-    }
-  );
-});
-
-
 // Add a new route for getting patient demographics (GET /api/patient-demographics)
 app.get("/api/patient-demographics", (req, res) => {
   db.query('SELECT gender, COUNT(*) as count FROM patients GROUP BY gender', (error, results) => {
@@ -485,71 +423,6 @@ app.get("/api/patient-demographics", (req, res) => {
   });
 });
 
-// Add a new route for getting appointment counts (GET /api/appointment-counts)
-app.get("/api/appointment-counts", (req, res) => {
-  const dateRange = req.query.dateRange || 'month';
-  let query;
-
-  if (dateRange === 'day') {
-    query = 'SELECT DATE(appointment_date) as date, COUNT(*) as count FROM appointments GROUP BY date';
-  } else if (dateRange === 'week') {
-    query = 'SELECT WEEK(appointment_date) as week, COUNT(*) as count FROM appointments GROUP BY week';
-  } else {
-    query = 'SELECT MONTH(appointment_date) as month, COUNT(*) as count FROM appointments GROUP BY month';
-  }
-
-  db.query(query, (error, results) => {
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    return res.json(results);
-  });
-});
-
-// // Add a new route for getting payment amounts (GET /api/payment-amounts)
-// app.get("/api/payment-amounts", (req, res) => {
-//   const dateRange = req.query.dateRange || 'month';
-//   let query;
-
-//   if (dateRange === 'day') {
-//     query = 'SELECT DATE(payment_date) as date, SUM(total_amount) as total FROM payments GROUP BY date';
-//   } else if (dateRange === 'week') {
-//     query = 'SELECT WEEK(payment_date) as week, SUM(total_amount) as total FROM payments GROUP BY week';
-//   } else {
-//     query = 'SELECT MONTH(payment_date) as month, SUM(total_amount) as total FROM payments GROUP BY month';
-//   }
-
-//   db.query(query, (error, results) => {
-//     if (error) {
-//       return res.status(500).json({ error: error.message });
-//     }
-
-//     return res.json(results);
-//   });
-// });
-
-// // Add a new route for getting the number of patients per doctor (GET /api/doctor-patients)
-// app.get("/api/doctor-patients", (req, res) => {
-//   db.query('SELECT d.first_name, d.last_name, COUNT(a.patient_id) as count FROM doctors d LEFT JOIN appointments a ON d.doctor_id = a.doctor_id GROUP BY d.doctor_id', (error, results) => {
-//     if (error) {
-//       return res.status(500).json({ error: error.message });
-//     }
-
-//     return res.json(results);
-//   });
-// });
-
-// // Add a new route for getting medication distribution (GET /api/medication-distribution)
-// app.get("/api/medication-distribution", (req, res) => {
-//   db.query('SELECT medication_name, COUNT(*) as count FROM prescription_details GROUP BY medication_id', (error, results) => {
-//     if (error) {
-//       return res.status(500).json({ error: error.message });
-//     }
-
-//     return res.json(results);
-//   });
-// });
 
 app.put("/api/doctors/:id", (req, res) => {
   const doctorId = req.params.id;
@@ -619,4 +492,105 @@ app.put("/api/doctors/:id/password", (req, res) => {
     });
   });
 });
+// Fetch prescriptions by doctor ID
+app.get('/api/prescriptions/:doctorId', (req, res) => {
+  const doctorId = req.params.doctorId;
+  const query = `
+    SELECT p.prescription_id, p.appointment_id, p.prescription_description, p.status
+    FROM prescriptions p
+    INNER JOIN appointments a ON p.appointment_id = a.appointment_id
+    WHERE a.doctor_id = ?`;
+  db.query(query, [doctorId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
+  });
+});
 
+
+
+// Fetch appointments by doctor ID
+app.get('/api/appointments/:doctorId', (req, res) => {
+  const doctorId = req.params.doctorId;
+  const query = 'SELECT * FROM appointments WHERE doctor_id = ?';
+  db.query(query, [doctorId], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json(results);
+  });
+});
+
+// Fetch medication by name
+app.get('/api/medications/:name', (req, res) => {
+  const name = req.params.name;
+  const query = 'SELECT * FROM medication_store WHERE medication_name = ?';
+  db.query(query, [name], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json(results[0]);
+  });
+});
+
+app.post('/api/prescriptions', (req, res) => {
+  const { appointment_id, status,prescription_description, prescribed_time, items } = req.body;
+
+  // Log the received data
+  console.log('Received prescription data:', req.body);
+
+  // Perform necessary validation
+  if (!appointment_id || !status ||!prescription_description || !prescribed_time || !items || items.length === 0) {
+      console.log('Validation failed:', { appointment_id, status,prescription_description, prescribed_time, items });
+      return res.status(400).json({ error: 'Invalid input data' });
+  }
+
+  // Insert prescription into the database
+  const insertPrescriptionQuery = 'INSERT INTO prescriptions (appointment_id, prescribed_time,prescription_description, status) VALUES (?, ?, ?, ?)';
+  db.query(insertPrescriptionQuery, [appointment_id, prescribed_time,prescription_description, status], (err, result) => {
+      if (err) {
+          console.error('Error inserting prescription:', err);
+          return res.status(500).json({ error: 'Failed to add prescription' });
+      }
+
+      const prescriptionId = result.insertId;
+
+      const itemQuery = 'INSERT INTO prescription_details (prescription_id, medication_id, quantity_prescribed, dosage, frequency, duration) VALUES ?';
+      const prescriptionItems = items.map(item => [prescriptionId, item.medication_id, item.quantity_prescribed, item.dosage, item.frequency, item.duration]);
+
+      db.query(itemQuery, [prescriptionItems], (err) => {
+          if (err) {
+              console.error('Error inserting prescription items:', err);
+              return res.status(500).json({ error: 'Failed to add prescription items' });
+          }
+
+          
+
+          res.status(201).json({ message: 'Prescription added successfully' });
+      });
+  });
+});
+
+
+
+
+// Delete a prescription
+app.delete('/api/prescriptions/:id', (req, res) => {
+  const id = req.params.id;
+
+  const deleteDetailsQuery = 'DELETE FROM prescription_details WHERE prescription_id = ?';
+  db.query(deleteDetailsQuery, [id], (err) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      const deletePrescriptionQuery = 'DELETE FROM prescriptions WHERE prescription_id = ?';
+      db.query(deletePrescriptionQuery, [id], (err) => {
+          if (err) {
+              return res.status(500).json({ error: err.message });
+          }
+          res.status(200).json({ message: 'Prescription deleted successfully' });
+      });
+  });
+});

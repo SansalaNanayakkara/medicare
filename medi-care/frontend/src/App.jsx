@@ -23,17 +23,17 @@ import AddMedicationForm from './Admin/AddMedicationForm';
 import AddPaymentForm from './Admin/AddPaymentForm';
 import DoctorHeader from './Doctor/DoctorHeader';
 import ManageAppointment from './Doctor/ManageAppointment';
-import ViewPrescriptions from './Doctor/ViewPrescriptions';
+import PrescriptionList from './Doctor/PrescriptionList';
 import ViewPatients from './Doctor/ViewPatients';
 import DoctorDashboard from './Doctor/DoctorDashboard';
 import Dprofile from './Doctor/Dprofile';
-import AddPrescriptionForm from './Doctor/AddPrescriptionForm';
+import AddPrescription from './Doctor/AddPrescription';
 import PatientDashboard from './Patient/PatientDashboard';
 import Pprofile from './Patient/Pprofile';
 import ViewAppointment from './Patient/ViewAppointmentList';
 import ViewDoctors from './Patient/ViewDoctors';
 import ViewPayments from './Patient/ViewPayments';
-import Prescription from './Doctor/Prescription';
+// import Prescription from './Doctor/Prescription';
 // import PrescriptionDetails from './components/PrescriptionDetails';
 import ViewAppointmentList from './Patient/ViewAppointmentList';
 import AddAppointmentFormP from './Patient/AddAppointmentFormP';
@@ -48,7 +48,7 @@ function App() {
       ) && <AdminHeader />}
 
        {/* Conditionally render DoctorHeader */}
-      {['/doctordashboard', '/manageprescription', '/viewpatients', '/manageappointment','/dprofile','/prescriptiondetails'].includes(
+      {['/doctordashboard', '/manageprescription', '/viewpatients', '/manageappointment','/dprofile','/prescriptionlist'].includes(
         window.location.pathname
       ) && <DoctorHeader />}
 
@@ -77,17 +77,17 @@ function App() {
         <Route path="/addmedicationform" element={<AddMedicationForm />} />
         <Route path="/addpaymentform" element={<AddPaymentForm />} />
         <Route path="/manageappointment" element={<ManageAppointment />} />
-        <Route path="/viewprescriptions" element={<ViewPrescriptions />} />
+        <Route path="/prescriptionlist" element={<PrescriptionList />} />
         <Route path="/viewpatients" element={<ViewPatients />} />
         <Route path="/doctordashboard" element={<DoctorDashboard />} />
         <Route path="/dprofile" element={<Dprofile />} />
-        <Route path="/addprescriptionform" element={<AddPrescriptionForm />} />
+        <Route path="/addprescription" element={<AddPrescription />} />
         <Route path="/patientdashboard" element={<PatientDashboard />} />
         <Route path="/pprofile" element={<Pprofile />} />
         <Route path="/viewappointment" element={<ViewAppointment />} />
         <Route path="/viewdoctors" element={<ViewDoctors />} />
         <Route path="/viewpayments" element={<ViewPayments />} />
-        <Route path="/prescription" element={<Prescription />} />
+        {/* <Route path="/prescription" element={<Prescription />} /> */}
         {/* <Route path="/prescriptiondetails" element={<PrescriptionDetails />} /> */}
         <Route path="/viewappointmentlist" element={<ViewAppointmentList />} />
         <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />
