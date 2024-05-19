@@ -533,22 +533,21 @@ app.get('/api/medications/:name', (req, res) => {
       res.json(results[0]);
   });
 });
-
 app.post('/api/prescriptions', (req, res) => {
-  const { appointment_id, status,prescription_description, prescribed_time, items } = req.body;
+  const { appointment_id, status, prescription_description, prescribed_time, items } = req.body;
 
   // Log the received data
   console.log('Received prescription data:', req.body);
 
   // Perform necessary validation
-  if (!appointment_id || !status ||!prescription_description || !prescribed_time || !items || items.length === 0) {
-      console.log('Validation failed:', { appointment_id, status,prescription_description, prescribed_time, items });
+  if (!appointment_id || !status || !prescription_description || !prescribed_time || !items || items.length === 0) {
+      console.log('Validation failed:', { appointment_id, status, prescription_description, prescribed_time, items });
       return res.status(400).json({ error: 'Invalid input data' });
   }
 
   // Insert prescription into the database
-  const insertPrescriptionQuery = 'INSERT INTO prescriptions (appointment_id, prescribed_time,prescription_description, status) VALUES (?, ?, ?, ?)';
-  db.query(insertPrescriptionQuery, [appointment_id, prescribed_time,prescription_description, status], (err, result) => {
+  const insertPrescriptionQuery = 'INSERT INTO prescriptions (appointment_id, prescribed_time, prescription_description, status) VALUES (?, ?, ?, ?)';
+  db.query(insertPrescriptionQuery, [appointment_id, prescribed_time, prescription_description, status], (err, result) => {
       if (err) {
           console.error('Error inserting prescription:', err);
           return res.status(500).json({ error: 'Failed to add prescription' });
@@ -565,10 +564,19 @@ app.post('/api/prescriptions', (req, res) => {
               return res.status(500).json({ error: 'Failed to add prescription items' });
           }
 
-          res.status(201).json({ message: 'Prescription added successfully' });
+          // Include the newly created prescription object with the prescription_id in the response
+          const newPrescription = {
+            prescription_id: prescriptionId,
+            appointment_id: appointment_id,
+            prescription_description: prescription_description,
+            status: status,
+            prescribed_time: prescribed_time,
+          };
+          res.status(201).json({ message: 'Prescription added successfully', newPrescription });
       });
   });
 });
+
 
 
 

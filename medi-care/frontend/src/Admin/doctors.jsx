@@ -46,9 +46,8 @@ function Doctors() {
     }}
   >
     <div className="container doctors-page">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        {/* Your navbar content here (e.g., brand name, navigation links) */}
-      </nav>
+      {/* <nav className="navbar navbar-expand-lg navbar-light bg-light"> 
+      </nav> */}
       <div className="row mt-3"> {/* Add margin-top for space */}
         <div className="col-md-12">
           <div className="search-options mb-3 d-flex justify-content-center"> {/* Center search bar horizontally */}

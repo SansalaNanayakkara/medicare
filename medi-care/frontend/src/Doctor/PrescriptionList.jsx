@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AddPrescription from './AddPrescription';
 import backgroundImage from "../Assests/background.jpg";
+import { Container } from 'react-bootstrap';
 
 const PrescriptionList = ({ doctorId }) => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -10,12 +11,15 @@ const PrescriptionList = ({ doctorId }) => {
   useEffect(() => {
     axios.get(`http://localhost:5000/api/prescriptions/${doctorId}`)
       .then(response => {
+        console.log(response.data);
         setPrescriptions(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the prescriptions!', error);
       });
   }, [doctorId]);
+
+  
 
   const handleDelete = (id) => {
     axios.delete(`http://localhost:5000/api/prescriptions/${id}`)
@@ -50,11 +54,11 @@ const PrescriptionList = ({ doctorId }) => {
       backgroundPosition: 'center',
       height: '100vh',
     }}>
-      <h2>Prescriptions</h2>
+      {/* <h2><center>Prescriptions</center></h2> */}
       {!showAddPrescription && (
         <>
-          <button onClick={handleAddPrescriptionClick}>Add Prescription</button>
-          <table className="table">
+         <Container className="prescription-list" style={{ paddingLeft: '15px', paddingRight: '15px' }}> 
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th>Prescription ID</th>
@@ -79,6 +83,10 @@ const PrescriptionList = ({ doctorId }) => {
               ))}
             </tbody>
           </table>
+          <div>
+          <button className="btn btn-primary btn-add-prescription" onClick={handleAddPrescriptionClick}>Add Prescription</button>
+          </div>
+          </Container>
         </>
       )}
       {showAddPrescription && <AddPrescription doctorId={doctorId} onClose={handleFormClose} onPrescriptionAdded={handlePrescriptionAdded} />}

@@ -32,7 +32,7 @@ const AddPrescription = ({ doctorId, onClose, onPrescriptionAdded }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const prescriptionItems = await Promise.all(items.map(async (item) => {
       const medicationId = await fetchMedicationId(item.medication_name);
       if (medicationId) {
@@ -40,14 +40,14 @@ const AddPrescription = ({ doctorId, onClose, onPrescriptionAdded }) => {
       }
       return null;
     }));
-
+  
     const validItems = prescriptionItems.filter(item => item !== null);
-
+  
     if (validItems.length === 0) {
       alert('Failed to add prescription: Invalid medication names');
       return;
     }
-
+  
     const newPrescription = {
       appointment_id: appointmentId,
       prescription_description: prescriptionDescription,
@@ -55,19 +55,21 @@ const AddPrescription = ({ doctorId, onClose, onPrescriptionAdded }) => {
       prescribed_time: prescribedTime,
       items: validItems
     };
-
+  
     console.log('Sending prescription data:', newPrescription);
-
+  
     axios.post('http://localhost:5000/api/prescriptions', newPrescription)
       .then(response => {
-        onPrescriptionAdded(newPrescription);
+        // Include the prescription_id in the newPrescription object
+        const newPrescriptionWithId = { ...newPrescription, prescription_id: response.data.newPrescription.prescription_id };
+        onPrescriptionAdded(newPrescriptionWithId);
         onClose(); // Close the form after submission
       })
       .catch(error => {
         console.error('There was an error adding the prescription!', error);
       });
   };
-
+  
   return (
     <Container className="bg-light p-5" style={{ maxWidth: '800px' }}>
       <Container fluid style={{ display: 'flex', justifyContent: 'center' }}>
