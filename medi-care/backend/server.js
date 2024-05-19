@@ -565,8 +565,6 @@ app.post('/api/prescriptions', (req, res) => {
               return res.status(500).json({ error: 'Failed to add prescription items' });
           }
 
-          
-
           res.status(201).json({ message: 'Prescription added successfully' });
       });
   });
