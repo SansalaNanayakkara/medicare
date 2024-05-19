@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import AddPrescription from './AddPrescription';
 import backgroundImage from "../Assests/background.jpg";
 import { Container } from 'react-bootstrap';
 
-const PrescriptionList = ({ doctorId }) => {
+const PrescriptionList = ({ doctorId = 3 }) => { // Default value for doctorId
   const [prescriptions, setPrescriptions] = useState([]);
   const [showAddPrescription, setShowAddPrescription] = useState(false);
 
-  useEffect(() => {
+  // Function to fetch prescriptions
+  const fetchPrescriptions = useCallback(() => {
+    console.log('Fetching prescriptions for doctorId:', doctorId); // Debug log
     axios.get(`http://localhost:5000/api/prescriptions/${doctorId}`)
       .then(response => {
-        console.log(response.data);
+        console.log('Fetched prescriptions:', response.data); // Debug log
         setPrescriptions(response.data);
       })
       .catch(error => {
@@ -19,12 +21,19 @@ const PrescriptionList = ({ doctorId }) => {
       });
   }, [doctorId]);
 
-  
+  // Fetch prescriptions on component mount and when doctorId changes
+  useEffect(() => {
+    if (doctorId) {
+      fetchPrescriptions();
+    }
+  }, [fetchPrescriptions, doctorId]);
 
   const handleDelete = (id) => {
     axios.delete(`http://localhost:5000/api/prescriptions/${id}`)
-      .then(response => {
-        setPrescriptions(prescriptions.filter(prescription => prescription.prescription_id !== id));
+      .then(() => {
+        setPrescriptions(prevPrescriptions => 
+          prevPrescriptions.filter(prescription => prescription.prescription_id !== id)
+        );
       })
       .catch(error => {
         console.error('There was an error deleting the prescription!', error);
@@ -32,7 +41,8 @@ const PrescriptionList = ({ doctorId }) => {
   };
 
   const handleEdit = (id) => {
-    // Implement edit functionality
+    // Implement edit functionality here
+    console.log(`Edit prescription with ID: ${id}`);
   };
 
   const handleAddPrescriptionClick = () => {
@@ -44,7 +54,8 @@ const PrescriptionList = ({ doctorId }) => {
   };
 
   const handlePrescriptionAdded = (newPrescription) => {
-    setPrescriptions([...prescriptions, newPrescription]);
+    setPrescriptions(prevPrescriptions => [...prevPrescriptions, newPrescription]);
+    setShowAddPrescription(false);
   };
 
   return (
@@ -54,10 +65,8 @@ const PrescriptionList = ({ doctorId }) => {
       backgroundPosition: 'center',
       height: '100vh',
     }}>
-      {/* <h2><center>Prescriptions</center></h2> */}
       {!showAddPrescription && (
-        <>
-         <Container className="prescription-list" style={{ paddingLeft: '15px', paddingRight: '15px' }}> 
+        <Container className="prescription-list" style={{ paddingLeft: '15px', paddingRight: '15px' }}> 
           <table className="table table-striped">
             <thead>
               <tr>
@@ -84,12 +93,17 @@ const PrescriptionList = ({ doctorId }) => {
             </tbody>
           </table>
           <div>
-          <button className="btn btn-primary btn-add-prescription" onClick={handleAddPrescriptionClick}>Add Prescription</button>
+            <button className="btn btn-primary btn-add-prescription" onClick={handleAddPrescriptionClick}>Add Prescription</button>
           </div>
-          </Container>
-        </>
+        </Container>
       )}
-      {showAddPrescription && <AddPrescription doctorId={doctorId} onClose={handleFormClose} onPrescriptionAdded={handlePrescriptionAdded} />}
+      {showAddPrescription && (
+        <AddPrescription
+          doctorId={doctorId}
+          onClose={handleFormClose}
+          onPrescriptionAdded={handlePrescriptionAdded}
+        />
+      )}
     </div>
   );
 };

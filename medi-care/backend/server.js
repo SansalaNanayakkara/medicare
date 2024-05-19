@@ -510,6 +510,7 @@ app.get('/api/prescriptions/:doctorId', (req, res) => {
 
 
 
+
 // Fetch appointments by doctor ID
 app.get('/api/appointments/:doctorId', (req, res) => {
   const doctorId = req.params.doctorId;
