@@ -227,18 +227,28 @@ app.post("/api/addpatients", (req, res) => {
   });
 });
 
-// Add a new route for retrieving the doctor list (GET /api/doctors)
 app.get("/api/patients", (req, res) => {
-  // Retrieve the doctor list from the database
-  db.query('SELECT * FROM users INNER JOIN patients ON users.user_id = patients.user_id', (error, results) => {
+  const doctorId = req.query.doctorId; // Retrieve doctorId from query params
+  if (!doctorId) {
+    return res.status(400).json({ error: "doctorId is required" });
+  }
+
+  const query = `
+    SELECT DISTINCT patients.*
+    FROM patients
+    INNER JOIN appointments ON patients.patient_id = appointments.patient_id
+    WHERE appointments.doctor_id = ?
+  `;
+
+  db.query(query, [doctorId], (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    // Return the doctor list
     return res.json(results);
   });
 });
+
 
 // Start server
 app.listen(port, () => {

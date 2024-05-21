@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import backgroundImage from "../Assests/background.jpg";
 import * as dayjs from 'dayjs';
 
-function ViewPatients() {
+function ViewPatients({ doctorId }) {  // Accept doctorId as a prop
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     // Fetch list from the API
-    axios.get('http://localhost:5000/api/patients')
+    axios.get(`http://localhost:5000/api/patients?doctorId=3`)
       .then(response => {
         setPatients(response.data);
         console.log(response.data);
@@ -20,7 +20,7 @@ function ViewPatients() {
       .catch(error => {
         console.error("Error fetching patients:", error);
       });
-  }, []);
+  }, [doctorId]);  // Add doctorId as a dependency to useEffect
 
   function handleSearchChange(event) {
     const searchTerm = event.target.value.toLowerCase();
