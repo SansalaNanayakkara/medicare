@@ -48,7 +48,7 @@ const ManageAppointment = ({ doctor_Id = 3 }) => {
       <Container>
         <Row>
           <Col>
-            <h1>Manage Appointments</h1>
+            {/* <h1>Manage Appointments</h1> */}
             {appointments.length > 0 ? (
               <DappointmentList appointments={appointments} handleDelete={handleDelete} />
             ) : (
