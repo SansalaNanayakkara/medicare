@@ -271,22 +271,19 @@ app.post("/api/addappointments", (req, res) => {
         );
       });
 
-// Add a new route for retrieving the appointment list (GET /api/appointments)
+// Route to get all appointments
 app.get("/api/appointments", (req, res) => {
-  // Retrieve the appointmnet list from the database
-  db.query('SELECT * FROM appointments ', (error, results) => {
+  db.query('SELECT * FROM appointments', (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
-    
-
     return res.json(results);
   });
 });
 
+// Route to get appointments for a specific doctor
 app.get("/api/doctor-appointments", (req, res) => {
   const doctorId = req.query.doctorId;
-
   let query;
   if (doctorId) {
     query = `
@@ -297,12 +294,10 @@ app.get("/api/doctor-appointments", (req, res) => {
   } else {
     query = `SELECT * FROM appointments`;
   }
-
   db.query(query, (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
-
     return res.json(results);
   });
 });

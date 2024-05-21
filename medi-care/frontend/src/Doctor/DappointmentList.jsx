@@ -1,24 +1,34 @@
 import React from 'react';
 
-function DappointmentList({ appointments }) {
-  if (!appointments || appointments.length === 0) {
-    return <p>No appointments found.</p>;
-  }
-
+const DappointmentList = ({ appointments, handleDelete }) => {
   return (
-    <tbody>
-      {appointments.map((appointment) => (
-        <tr key={appointment.appointmentId}>
-          <td>{appointment.appointment_Id}</td>
-          <td>{appointment.doctor_Id}</td>
-          <td>{appointment.patientId}</td>
-          <td>{appointment.date}</td>
-          <td>{appointment.time}</td>
-          <td>{appointment.reason}</td>
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          <th>Appointment ID</th>
+          <th>Patient ID</th>
+          <th>Doctor ID</th>
+          <th>Appointment Time</th>
+          {/* <th>Status</th> */}
+          <th>Action</th>
         </tr>
-      ))}
-    </tbody>
+      </thead>
+      <tbody>
+        {appointments.map(appointment => (
+          <tr key={appointment.appointment_id}>
+            <td>{appointment.appointment_id}</td>
+            <td>{appointment.patient_id}</td>
+            <td>{appointment.doctor_id}</td>
+            <td>{appointment.appointment_time}</td>
+            {/* <td>{appointment.status}</td> */}
+            <td>
+              <button onClick={() => handleDelete(appointment.appointment_id)}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
-}
+};
 
 export default DappointmentList;

@@ -2,24 +2,39 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DappointmentList from './DappointmentList';
 import backgroundImage from "../Assests/background.jpg";
+import { Container, Row, Col } from 'react-bootstrap';
 
-function ManageAppointment({ doctor_Id }) {
+const ManageAppointment = ({ doctor_Id = 3 }) => {
   console.log("ManageAppointment is being called"); // Check if the component is being called
 
   const [appointments, setAppointments] = useState([]);
 
-  console.log(doctor_Id); // Check if the doctorId prop is being passed correctly
+  console.log("doctor_Id:", doctor_Id); // Check if the doctorId prop is being passed correctly
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/doctor-appointments?doctorId=${doctor_Id}`)
-      .then(response => {
-        console.log(response.data); // Check if the API response is correct
-        setAppointments(response.data);
+    if (doctor_Id) {
+      axios.get(`http://localhost:5000/api/doctor-appointments?doctorId=${doctor_Id}`)
+        .then(response => {
+          console.log(response.data); // Check if the API response is correct
+          setAppointments(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching appointments:", error);
+        });
+    } else {
+      console.error("doctor_Id is undefined!");
+    }
+  }, [doctor_Id]);
+
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:5000/api/appointments/${id}`)
+      .then(() => {
+        setAppointments(prev => prev.filter(appointment => appointment.appointment_id !== id));
       })
       .catch(error => {
-        console.error("Error fetching appointments:", error);
+        console.error('Error deleting appointment!', error);
       });
-  }, [doctor_Id]);
+  };
 
   return (
     <div
@@ -30,20 +45,20 @@ function ManageAppointment({ doctor_Id }) {
         height: '100vh',
       }}
     >
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            {/* <h2>Appointments for Doctor ID: {doctorId}</h2> */}
+      <Container>
+        <Row>
+          <Col>
+            <h1>Manage Appointments</h1>
             {appointments.length > 0 ? (
-              <DappointmentList appointments={appointments} />
+              <DappointmentList appointments={appointments} handleDelete={handleDelete} />
             ) : (
               <p>No appointments found.</p>
             )}
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
-}
+};
 
 export default ManageAppointment;
