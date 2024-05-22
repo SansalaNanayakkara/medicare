@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import generatePdf from './generatePdf';
+import backgroundImage from "../Assests/background.jpg"; // Import the background image
 
 const PatientPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -22,7 +23,15 @@ const PatientPrescriptions = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        padding: '20px'
+      }}
+    >
       <table className="table table-striped">
         <thead>
           <tr>

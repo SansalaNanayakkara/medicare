@@ -11,7 +11,7 @@ function ViewPatients({ doctorId }) {  // Accept doctorId as a prop
 
   useEffect(() => {
     // Fetch list from the API
-    axios.get(`http://localhost:5000/api/patients?doctorId=3`)
+    axios.get(`http://localhost:5000/api/doctor-patients?doctorId=3`)
       .then(response => {
         setPatients(response.data);
         console.log(response.data);
