@@ -2,12 +2,13 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 const generatePdf = (prescription) => {
+    console.log('Prescription data:', prescription); // Log the entire prescription object
+
     const doc = new jsPDF();
 
     // Add the prescription data to the PDF
     doc.text(`Appointment ID: ${prescription.appointment_id}`, 10, 20);
     doc.text(`Description: ${prescription.prescription_description}`, 10, 30);
-    doc.text(`Status: ${prescription.status}`, 10, 40);
     doc.text(`Prescribed Time: ${prescription.prescribed_time}`, 10, 50);
 
     // Log the items to verify they are correct
@@ -36,6 +37,3 @@ const generatePdf = (prescription) => {
 };
 
 export default generatePdf;
-
-
-

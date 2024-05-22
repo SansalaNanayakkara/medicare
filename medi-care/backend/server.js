@@ -634,16 +634,43 @@ app.put('/api/prescriptions/:id', (req, res) => {
 
 app.get('/api/prescriptions/patient/:patientId', (req, res) => {
   const patientId = req.params.patientId;
-  const query = `
+  
+  // Query to get the prescriptions
+  const prescriptionsQuery = `
     SELECT p.*, a.appointment_date, a.appointment_time
     FROM prescriptions p
     JOIN appointments a ON p.appointment_id = a.appointment_id
     WHERE a.patient_id = ?
   `;
-  db.query(query, [patientId], (err, results) => {
+
+  // Query to get the items for each prescription
+  const itemsQuery = `
+    SELECT pd.*, m.medication_name
+    FROM prescription_details pd
+    JOIN medication_store m ON pd.medication_id = m.medication_id
+    WHERE pd.prescription_id = ?
+  `;
+
+  db.query(prescriptionsQuery, [patientId], (err, prescriptions) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json(results);
+
+    // Fetch items for each prescription
+    const promises = prescriptions.map(prescription => {
+      return new Promise((resolve, reject) => {
+        db.query(itemsQuery, [prescription.prescription_id], (err, items) => {
+          if (err) {
+            return reject(err);
+          }
+          prescription.items = items;
+          resolve(prescription);
+        });
+      });
+    });
+
+    Promise.all(promises)
+      .then(results => res.json(results))
+      .catch(err => res.status(500).json({ error: err.message }));
   });
 });

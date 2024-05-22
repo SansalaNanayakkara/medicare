@@ -9,6 +9,7 @@ const PatientPrescriptions = () => {
     const patientId = 10; // Fetch prescriptions for patient with ID 10
     axios.get(`http://localhost:5000/api/prescriptions/patient/${patientId}`)
       .then(response => {
+        console.log('Fetched prescriptions:', response.data); // Log the response data
         setPrescriptions(response.data);
       })
       .catch(error => {
