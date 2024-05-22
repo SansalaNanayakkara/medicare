@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import EditPrescription from './EditPrescription';
 import MarkDispensed from './MarkDispensed';
+import backgroundImage from "../Assests/background.jpg"; // Import the background image
 
 const AdminPrescriptionList = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -73,7 +74,15 @@ const AdminPrescriptionList = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        padding: '20px'
+      }}
+    >
       <table className="table table-striped">
         <thead>
           <tr>
