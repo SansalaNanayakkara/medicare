@@ -7,7 +7,7 @@ function PatientHeader() {
     { path: '/patientdashboard', label: 'Dashboard' },
     { path: '/pappointments', label: 'Appointments' },
     { path: '/viewdoctors', label: 'Doctors' },
-    { path: '/viewprescription', label: 'Prescriptions' },
+    { path: '/patientprescriptions', label: 'Prescriptions' },
     { path: '/viewpayments', label: 'Payments' },
   ];
 

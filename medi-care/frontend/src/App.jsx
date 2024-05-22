@@ -12,7 +12,7 @@ import Doctors from './Admin/doctors';
 import Appointments from './Admin/appointments'; 
 import Patients from './Admin/patients'; 
 import MedicationStore from './Admin/MedicationStore';
-import Prescriptions from './Admin/prescriptions';
+import AdminPrescriptionList from './Admin/AdminPrescriptionList';
 import Payments from './Admin/payments';
 import Reports from './Admin/Reports';
 import Profile from './Admin/Profile'; 
@@ -33,7 +33,7 @@ import Pprofile from './Patient/Pprofile';
 import ViewAppointment from './Patient/ViewAppointmentList';
 import ViewDoctors from './Patient/ViewDoctors';
 import ViewPayments from './Patient/ViewPayments';
-// import Prescription from './Doctor/Prescription';
+ import PatientPrescriptions from './Patient/PatientPrescriptions';
 // import PrescriptionDetails from './components/PrescriptionDetails';
 import ViewAppointmentList from './Patient/ViewAppointmentList';
 import AddAppointmentFormP from './Patient/AddAppointmentFormP';
@@ -43,7 +43,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* Conditionally render AdminHeader */}
-      {['/dashboard', '/doctors', '/patients', '/appointments','/medicationstore','/prescriptions','/payments','/reports','/profile' ].includes(
+      {['/dashboard', '/doctors', '/patients', '/appointments','/medicationstore','/adminprescriptionlist','/payments','/reports','/profile' ].includes(
         window.location.pathname
       ) && <AdminHeader />}
 
@@ -53,7 +53,7 @@ function App() {
       ) && <DoctorHeader />}
 
        {/* Conditionally render PatientHeader */}
-       {['/patientdashboard', '/viewprescription', '/viewdoctors', '/viewappointmentlist','/pprofile','/viewpayments' ].includes(
+       {['/patientdashboard', '/viewprescription', '/viewdoctors', '/viewappointmentlist','/pprofile','/viewpayments','/patientprescriptions' ].includes(
         window.location.pathname
       ) && <PatientHeader />}
 
@@ -67,7 +67,7 @@ function App() {
         <Route path="/patients" element={<Patients />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/medicationstore" element={<MedicationStore />} />
-        <Route path="/prescriptions" element={<Prescriptions />} />
+        <Route path="/adminprescriptionlist" element={<AdminPrescriptionList />} />
         <Route path="/payments" element={<Payments />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/profile" element={<Profile />} />
@@ -87,7 +87,7 @@ function App() {
         <Route path="/viewappointment" element={<ViewAppointment />} />
         <Route path="/viewdoctors" element={<ViewDoctors />} />
         <Route path="/viewpayments" element={<ViewPayments />} />
-        {/* <Route path="/prescription" element={<Prescription />} /> */}
+        <Route path="/patientprescriptions" element={<PatientPrescriptions />} />
         {/* <Route path="/prescriptiondetails" element={<PrescriptionDetails />} /> */}
         <Route path="/viewappointmentlist" element={<ViewAppointmentList />} />
         <Route path="/addappointmentformp" element={<AddAppointmentFormP />} />

@@ -606,3 +606,44 @@ app.delete('/api/prescriptions/:id', (req, res) => {
       });
   });
 });
+
+// NEW: Get all prescriptions
+app.get('/api/prescriptions', (req, res) => {
+  const query = 'SELECT * FROM prescriptions';
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
+  });
+});
+
+// NEW: Update a prescription
+app.put('/api/prescriptions/:id', (req, res) => {
+  const id = req.params.id;
+  const { appointment_id, status, prescription_description, prescribed_time } = req.body;
+
+  const query = 'UPDATE prescriptions SET appointment_id = ?, status = ?, prescription_description = ?, prescribed_time = ? WHERE prescription_id = ?';
+  db.query(query, [appointment_id, status, prescription_description, prescribed_time, id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'Prescription updated successfully' });
+  });
+});
+
+app.get('/api/prescriptions/patient/:patientId', (req, res) => {
+  const patientId = req.params.patientId;
+  const query = `
+    SELECT p.*, a.appointment_date, a.appointment_time
+    FROM prescriptions p
+    JOIN appointments a ON p.appointment_id = a.appointment_id
+    WHERE a.patient_id = ?
+  `;
+  db.query(query, [patientId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
+  });
+});

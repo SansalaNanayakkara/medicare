@@ -9,7 +9,7 @@ function AdminHeader() {
     { path: '/patients', label: 'Patients' },
     { path: '/appointments', label: 'Appointments' },
     { path: '/medicationstore', label: 'Medication Store' },
-    { path: '/prescriptions', label: 'Prescriptions' },
+    { path: '/adminprescriptionlist', label: 'Prescriptions' },
     { path: '/payments', label: 'Payments' },
     { path: '/reports', label: 'Reports' },
   ];
